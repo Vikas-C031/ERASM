@@ -21,5 +21,4 @@ public class AllocationRequestDTO {
 	private String projectRole;
 	private LocalDate startDate;
 	private LocalDate endDate;
-	private AllocationStatus status;
 }

@@ -22,7 +22,7 @@ public class AllocationMapper {
         allocation.setProjectRole(dto.getProjectRole());
         allocation.setStartDate(dto.getStartDate());
         allocation.setEndDate(dto.getEndDate());
-        allocation.setStatus(dto.getStatus());
+ 
         return allocation;
     }
     public AllocationResponseDTO toResponseDTO(Allocation allocation) {
@@ -40,7 +40,7 @@ public class AllocationMapper {
         dto.setProjectRole(allocation.getProjectRole());
         dto.setStartDate( allocation.getStartDate());
         dto.setEndDate(allocation.getEndDate());
-
+        dto.setProjectName(allocation.getProject().getProjectName());
         dto.setStatus(allocation.getStatus());
 
         dto.setCreatedAt( allocation.getCreatedAt());

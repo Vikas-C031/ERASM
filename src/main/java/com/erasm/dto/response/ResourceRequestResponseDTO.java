@@ -21,8 +21,6 @@ public class ResourceRequestResponseDTO {
     private String projectName;
 
     private String skillName;
-
-    private Skill requiredSkill;
     
     private String requestedRole;
 

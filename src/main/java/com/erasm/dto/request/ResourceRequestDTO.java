@@ -15,5 +15,6 @@ public class ResourceRequestDTO {
 	private Double experienceRequired;
 	private Integer numberOfResources;
 	private RequestPriority priority;
+	private Long requestedByEmployeeId;
 	
 }
