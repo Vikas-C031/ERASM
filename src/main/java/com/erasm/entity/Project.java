@@ -1,5 +1,6 @@
 package com.erasm.entity;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import com.erasm.enums.ProjectStatus;
@@ -42,6 +43,12 @@ public class Project extends BaseEntity{
 	
 	@Column(name="end_date",nullable=false)
 	private LocalDate endDate;
+	
+	@Column(name = "technology_stack", nullable = false, length = 500)
+	private String technologyStack;
+	
+	@Column(name = "budget", nullable = false, precision = 15, scale = 2)
+	private BigDecimal budget;
 	
 	@Enumerated(EnumType.STRING)
 	@Column(name="status",nullable=false)

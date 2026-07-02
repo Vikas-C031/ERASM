@@ -2,8 +2,10 @@ package com.erasm.enums;
 
 public enum RequestStatus {
 
-	OPEN,
+	DRAFT,
+	SUBMITTED,
+	REVIEW,
 	APPROVED,
-	FULFILLED,
-	CANCELLED
+	ALLOCATED,
+	COMPLETED
 }

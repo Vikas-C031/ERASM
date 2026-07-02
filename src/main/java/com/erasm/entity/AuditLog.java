@@ -40,7 +40,7 @@ public class AuditLog extends BaseEntity {
 	private AuditAction action;
 	
 	@Column(name="entity_name",nullable=false,length=100)
-	private Long entityName;
+	private String entityName;
 	
 	@Column(name="entity_id",nullable=false)
 	private Long entityId;

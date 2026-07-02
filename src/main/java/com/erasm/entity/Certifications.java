@@ -28,7 +28,7 @@ public class Certifications extends BaseEntity {
 	private Long id;
 	
 	@Column(name="certification_name",nullable=false,length=150)
-	private String certificateName;
+	private String certificationName;
 	
 	@Column(name="issuing_organization",nullable=false,length=100)
 	private String issuingOrganization;

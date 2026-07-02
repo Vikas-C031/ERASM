@@ -2,7 +2,7 @@ package com.erasm.enums;
 
 public enum SkillLevel {
 	
-	BEGINEER,
+	BEGINNER,
 	INTERMEDIATE,
 	ADVANCED,
 	EXPERT

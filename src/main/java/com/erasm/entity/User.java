@@ -32,6 +32,9 @@ public class User extends BaseEntity{
 	@Column(name="password",nullable=false,length=255)
 	private String password;
 	
+	@Column(name="email",nullable=false,unique=true)
+	private String email;
+	
 	@Column(name="enabled",nullable=false)
 	private Boolean enabled=true;
 	
