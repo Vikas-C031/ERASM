@@ -3,6 +3,8 @@ package com.erasm.service;
 import java.math.BigDecimal;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.erasm.dto.request.ProjectRequestDTO;
@@ -20,12 +22,17 @@ public class ProjectService {
 	
 	private final ProjectRepository projectRepository;
 	private final ProjectMapper projectMapper;
+	
+	private static final Logger logger =
+	        LoggerFactory.getLogger(ProjectService.class);
+	
 	public ProjectService(ProjectRepository projectRepository, ProjectMapper projectMapper) {
 		this.projectRepository = projectRepository;
 		this.projectMapper = projectMapper;
 	}
 	
 	public ProjectResponseDTO createProject(ProjectRequestDTO dto) {
+		logger.info("Creating project with code: {}", dto.getProjectCode());
 		if(projectRepository.existsByProjectCode(dto.getProjectCode())) {
 			throw new IllegalArgumentException("Project code already exists");
 		}
@@ -37,7 +44,13 @@ public class ProjectService {
 		}
 		Project project=projectMapper.toEntity(dto);
 		Project savedProject=projectRepository.save(project);
+		logger.info(
+			    "Project '{}' created successfully with id: {}",
+			    savedProject.getProjectCode(),
+			    savedProject.getId()
+			);
 		return projectMapper.toResponseDTO(savedProject);
+		
 		
 	}
 	
@@ -53,6 +66,8 @@ public class ProjectService {
 	
 	public ProjectResponseDTO updateProject(Long id, ProjectRequestDTO dto) {
 
+		logger.info("Updating project with id: {}", id);
+		
 	    Project existingProject = projectRepository.findById(id).orElseThrow(() ->new ProjectNotFoundException("Project not found with id: " + id));
 
 	    if (projectRepository.existsByProjectCode(dto.getProjectCode())
@@ -78,12 +93,19 @@ public class ProjectService {
 	    existingProject.setStatus(dto.getStatus());
 
 	    Project updatedProject = projectRepository.save(existingProject);
+	    logger.info(
+	    	    "Project '{}' updated successfully.",
+	    	    updatedProject.getProjectCode()
+	    	);
+	    
 	    return projectMapper.toResponseDTO(updatedProject);
 	}
 	
 	public void deleteProject(Long id) {
+		logger.info("Deleting project with id: {}", id);
 		Project project=projectRepository.findById(id).orElseThrow(()->new ProjectNotFoundException("project not found with id"+id));
 		projectRepository.delete(project);
+		logger.info("Project deleted successfully.");
 	}
 	
 	public List<ProjectResponseDTO> searchProjectsByname(String projectName){

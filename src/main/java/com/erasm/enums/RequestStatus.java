@@ -6,6 +6,7 @@ public enum RequestStatus {
 	SUBMITTED,
 	REVIEW,
 	APPROVED,
+	REJECTED,
 	ALLOCATED,
 	COMPLETED
 }

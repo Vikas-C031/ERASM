@@ -2,8 +2,8 @@ package com.erasm.service;
 
 import java.util.List;
 
-
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.erasm.dto.request.EmployeeRequestDTO;
@@ -21,6 +21,9 @@ public class EmployeeService {
 	private final EmployeeRepository employeeRepository;
 	private final RoleRepository roleRepository;
 	private final EmployeeMapper employeeMapper;
+	
+	private static final Logger logger =LoggerFactory.getLogger(EmployeeService.class);
+	
 	public EmployeeService(EmployeeRepository employeeRepository, RoleRepository roleRepository,
 			EmployeeMapper employeeMapper) {
 		super();
@@ -30,10 +33,19 @@ public class EmployeeService {
 	}
 	
 	public EmployeeResponseDTO createEmployee(EmployeeRequestDTO dto) {
+		logger.info("Creating employee with code: {}", dto.getEmployeeCode());
 		if(employeeRepository.existsByEmployeeCode(dto.getEmployeeCode())) {
+			logger.warn(
+				    "Employee creation failed. Employee code '{}' already exists.",
+				    dto.getEmployeeCode()
+				);
 			throw new IllegalArgumentException("Employee code already exists");
 		}
 		if(employeeRepository.existsByEmail(dto.getEmail())) {
+			logger.warn(
+				    "Employee creation failed. Email '{}' already exists.",
+				    dto.getEmail()
+				);
 			throw new IllegalArgumentException("Email already exists");
 		}
 		if(dto.getExperience()<0) {
@@ -44,6 +56,11 @@ public class EmployeeService {
 		
 		Employee employee=employeeMapper.toEntity(dto, role);
 		Employee savedEmployee=employeeRepository.save(employee);
+		logger.info(
+			    "Employee '{}' created successfully with id: {}",
+			    savedEmployee.getEmployeeCode(),
+			    savedEmployee.getId()
+			);
 		return employeeMapper.toResponseDTO(savedEmployee);
 	}
 	
@@ -58,6 +75,7 @@ public class EmployeeService {
 	}
 	
 	public EmployeeResponseDTO updateEmployee(Long id,EmployeeRequestDTO dto) {
+		logger.info("Updating employee with id: {}", id);
 		Employee existingEmployee=employeeRepository.findById(id).orElseThrow(()->new EmployeeNotFoundException("Employee not found with the id: "+id));
 		if(employeeRepository.existsByEmployeeCode(dto.getEmployeeCode()) &&
 				!existingEmployee.getEmployeeCode().equals(dto.getEmployeeCode())) {
@@ -88,11 +106,17 @@ public class EmployeeService {
 	    existingEmployee.setRole(role);
 	    
 	    Employee updatedEmployee=employeeRepository.save(existingEmployee);
+	    logger.info(
+	    	    "Employee '{}' updated successfully.",
+	    	    updatedEmployee.getEmployeeCode()
+	    	);
 	    return employeeMapper.toResponseDTO(updatedEmployee);
 	}
 	public void deleteEmployee(Long id) {
+		logger.info("Deleting employee with id: {}", id);
 		Employee employee=employeeRepository.findById(id).orElseThrow(()->new EmployeeNotFoundException("Employee not found with id: "+id));
 		employeeRepository.delete(employee);
+		logger.info("Employee deleted successfully.");
 	}
 	
 	public List<EmployeeResponseDTO> searchEmployeeByName(String firstName){

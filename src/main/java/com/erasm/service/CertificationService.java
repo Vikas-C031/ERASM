@@ -3,6 +3,8 @@ package com.erasm.service;
 import java.time.LocalDate;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.erasm.dto.request.CertificationRequestDTO;
@@ -20,6 +22,9 @@ public class CertificationService {
 	private final CertificationsRepository certificationsRepository;
 	private final EmployeeRepository employeeRepository;
 	private final CertificationMapper certificationMapper;
+	
+	private static final Logger logger =LoggerFactory.getLogger(CertificationService.class);
+	
 	public CertificationService(CertificationsRepository certificationsRepository,
 			EmployeeRepository employeeRepository, CertificationMapper certificationMapper) {
 		this.certificationsRepository = certificationsRepository;
@@ -29,6 +34,11 @@ public class CertificationService {
 
 	public CertificationResponseDTO createCertification(CertificationRequestDTO dto) {
 
+		logger.info(
+			    "Adding certification '{}' for employee {}",
+			    dto.getCertificationName(),
+			    dto.getEmployeeId()
+			);
 	    Employee employee=employeeRepository.findById(dto.getEmployeeId()).orElseThrow(()->new EmployeeNotFoundException("Employee not found with id: "+dto.getEmployeeId()));
 
 	    if (dto.getExpiryDate()!=null
@@ -38,6 +48,8 @@ public class CertificationService {
 	    Certifications certification=certificationMapper.toEntity(dto, employee);
 	    Certifications savedCertification=certificationsRepository.save(certification);
 
+	    logger.info("Certification added successfully.");
+	    
 	    return certificationMapper.toResponseDTO(savedCertification);
 	}
 	public List<CertificationResponseDTO> getAllCertifications(){
@@ -53,6 +65,7 @@ public class CertificationService {
 	
 	public CertificationResponseDTO updateCertification(Long id,CertificationRequestDTO dto) {
 
+		logger.info("Certification updating successfully.");
 	    Certifications existingCertification=certificationsRepository.findById(id).orElseThrow(() ->new IllegalArgumentException("Certification not found with id: "+ id));
 
 	    Employee employee=employeeRepository.findById(dto.getEmployeeId()).orElseThrow(() ->new EmployeeNotFoundException("Employee not found with id: "+dto.getEmployeeId()));
@@ -75,12 +88,17 @@ public class CertificationService {
 	    existingCertification.setCertificateUrl(dto.getCertificateUrl());
 
 	    Certifications updatedCertification=certificationsRepository.save(existingCertification);
+	    
+	    logger.info("Certification updated successfully.");
+	    
 	    return certificationMapper.toResponseDTO(updatedCertification);
 	}
 	public void deleteCertification(Long id){
 
+		logger.info("Certification deleting successfully.");
 	    Certifications certification=certificationsRepository.findById(id).orElseThrow(() ->new IllegalArgumentException("Certification not found with id: "+id));
 	    certificationsRepository.delete(certification);
+	    logger.info("Certification deleted successfully.");
 	}
 	
 	public List<CertificationResponseDTO> getCertificationsByEmployee(Long employeeId){

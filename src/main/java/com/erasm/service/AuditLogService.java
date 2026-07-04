@@ -3,6 +3,8 @@ package com.erasm.service;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.erasm.dto.response.AuditLogResponseDTO;
@@ -17,6 +19,9 @@ public class AuditLogService {
 	
 	private final AuditLogRepository auditLogRepository;
 	private final AuditLogMapper auditLogMapper;
+	
+	private static final Logger logger =LoggerFactory.getLogger(AuditLogService.class);
+	
 	public AuditLogService(AuditLogRepository auditLogRepository, AuditLogMapper auditLogMapper) {
 		super();
 		this.auditLogRepository = auditLogRepository;
@@ -38,6 +43,7 @@ public class AuditLogService {
 	}
 	public List<AuditLogResponseDTO> getAllAuditLogs() {
 
+		logger.info("Retrieving all audit logs.");
 	    List<AuditLog> auditLogs = auditLogRepository.findAll();
 
 	    return auditLogMapper.toResponseDTOList(auditLogs);
